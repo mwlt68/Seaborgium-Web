@@ -5,9 +5,9 @@ import { ApiBaseService } from './ApiBaseService';
 
 export class AuthenticationApiService extends ApiBaseService {
     
-    readonly loginReqPath = "api/Authentication/login";
+    static readonly loginReqPath = "api/Authentication/login";
     
-    async login(username:string,password:string) :Promise<BaseResponseModel<LoginResponseModel|null>>{
+    static async login(username:string,password:string) :Promise<BaseResponseModel<LoginResponseModel|null>>{
         let loginReqModel = new LoginRequestModel(username,password);
         var result = await this.Post<LoginRequestModel,LoginResponseModel>(this.loginReqPath,loginReqModel);
         return result;

@@ -12,9 +12,10 @@ import { AuthManager } from "../../utils/helpers/AuthManager";
 
 export abstract class ApiBaseService {
   
-  readonly BaseUrl: string = "https://localhost:7175";
+  static readonly BaseUrl: string = "https://localhost:7175";
+  static isBusy:boolean = false;
 
-  async SendRequest<
+  static async SendRequest<
     ReqModel extends NullableBaseRequestModel,
     ResModel extends NullableBaseResultModel
   >(
@@ -24,6 +25,7 @@ export abstract class ApiBaseService {
     params?: URLSearchParams
   ): Promise<BaseResponseModel<ResModel | null>> {
     debugger;
+    this.isBusy=true;
     var response = await axios
       .request({
         baseURL: this.BaseUrl,
@@ -56,17 +58,18 @@ export abstract class ApiBaseService {
           );
         }
       });
+    this.isBusy=false;
     return response;
   }
 
-  Post<ReqModel extends BaseRequestModel, ResModel extends BaseResultModel>(
+  static async Post<ReqModel extends BaseRequestModel, ResModel extends BaseResultModel>(
     path: string,
     data?: ReqModel
   ): Promise<BaseResponseModel<ResModel | null>> {
     return this.SendRequest<ReqModel, ResModel>("post", path, data);
   }
 
-  Get<ResModel extends BaseResultModel>(
+  static async Get<ResModel extends BaseResultModel>(
     path: string,
     params?: URLSearchParams
   ): Promise<BaseResponseModel<BaseResultModel | null>> {

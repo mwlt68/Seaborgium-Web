@@ -19,8 +19,7 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     setLoginButtonEnable(false);
-    let authApiService = new AuthenticationApiService();
-    authApiService
+    AuthenticationApiService
       .login(username, password)
       .then((loginResponse) => {
         if (
