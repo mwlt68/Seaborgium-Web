@@ -1,5 +1,5 @@
 export class ProjectConsts {
-    static Name = "Seaborgium";
+    static Name = "SEABORGIUM";
     static TokenStorageKey = "TokenKey"
  }
  

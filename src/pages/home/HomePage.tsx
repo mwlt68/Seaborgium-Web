@@ -1,5 +1,9 @@
+import SideBar from "../../components/ui/side-bar/SideBar";
+
 export default function HomePage(){
     return (
-        <h1>Home Page</h1>
+        <SideBar>
+            <h1>Hello</h1>
+        </SideBar>
     )
 }
