@@ -7,14 +7,6 @@ export const styles = {
     overflowY: "auto",
     height: "100vh",
   },
-  errorOrLoadingContainer: {
-    display: "flex",
-    height: "100vh",
-    flexDirection: "column",
-    alignItems:"center",
-    justifyContent: "center",
-    gap: "1rem"
-  },
   headerCart: {
     display: "flex",
     flexDirection: "row-reverse",
@@ -45,8 +37,5 @@ export const styles = {
   },
   productCardImage: {
     objectFit: "fill",
-  },
-  errorAlert: {
-    maxWidth:"50%"
   },
 };

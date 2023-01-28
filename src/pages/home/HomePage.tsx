@@ -1,5 +1,4 @@
 import {
-  Alert,
   Box,
   Button,
   Card,
@@ -7,7 +6,6 @@ import {
   CardActions,
   CardContent,
   CardMedia,
-  CircularProgress,
   Typography,
 } from "@mui/material";
 import SideBar from "../../components/ui/side-bar/SideBar";
@@ -20,9 +18,8 @@ import { ProductApiService } from "../../services/api-service/ProductApiService"
 import { AuthManager } from "../../utils/helpers/AuthManager";
 import { useNavigate } from "react-router-dom";
 import { NavigationConsts } from "../../utils/consts/NavigationConsts";
-import PageLoading from "../../components/ui/page-loading/PageLoading";
-import errorAnimation from "../../assets/lotties/error.json"
-import Lottie from "lottie-react";
+import {CenterPageLoading} from "../../components/ui/page-loading/PageLoading";
+import { ErrorPageWithLottie } from "../../components/ui/error-page/ErrorPageWithLottie";
 
 
 export default function HomePage() {
@@ -34,6 +31,7 @@ export default function HomePage() {
   
   function getProducts(){
     ProductApiService.GetProducts().then(res=>{
+      debugger
       if(res?.result && !res.hasException){
         setProducts(res.result);
       }
@@ -54,38 +52,22 @@ export default function HomePage() {
 
   useEffect(() => {
     getProducts();
-  },[])
+  })
 
 
   return (
     <SideBar>
       {
         pageLoading ? 
-          <PageContentLoading/>
+          <CenterPageLoading/>
           : pageLoadingError ? 
-            <ErrorPageContent/>
+            <ErrorPageWithLottie message={pageLoadingError}/>
             : <PageContent/>
       }
     </SideBar>
   );
   
-  function PageContentLoading(){
-    return (
-      <Box sx={styles.errorOrLoadingContainer}>
-        <PageLoading/>
-      </Box>
-    );
-  }
-  function ErrorPageContent(){
-    return (
-      <Box sx={styles.errorOrLoadingContainer}>
-        <Lottie animationData={errorAnimation} loop={true}/>
-        <Alert variant="filled" severity="error" sx={styles.errorAlert} >
-          {pageLoadingError}
-        </Alert>
-      </Box>
-    );
-  }
+
   function PageContent(){
     return (
       <Box sx={styles.container}>
