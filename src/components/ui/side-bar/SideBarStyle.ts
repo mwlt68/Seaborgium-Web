@@ -4,6 +4,7 @@ export const styles = {
     container: {
       display: "flex",
       flexDirection: "row",
+      width: "100vw",
     },
     sideBarContainer: {
       backgroundColor: ColorConsts.LightBeige,
@@ -32,6 +33,7 @@ export const styles = {
     },
     main: {
       margin: "0 0.5em",
+      flexGrow:1
     },
     signOutButton: {
       marginTop: "auto",
