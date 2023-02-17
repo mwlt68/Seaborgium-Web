@@ -1,14 +1,14 @@
 import { BaseResultModel } from "./BaseResultModel";
 
 export class ProductResultModel extends BaseResultModel {
-    id:number | undefined;
+    id:number | undefined=undefined;
     stockQuantity:number=0;
-    name?:string;
-    brand?:string;
-    category?:string;
+    name:string|null=null;
+    brand:string|null=null;
+    category:string|null=null;
     price:number=0;
     
-    constructor(name?:string,price:number=0,brand?:string,category?:string,stockQuantity:number=0)
+    constructor(name:string|null=null,price:number=0,brand:string|null=null,category:string|null=null,stockQuantity:number=0)
     {
         super();
         this.stockQuantity=stockQuantity;
