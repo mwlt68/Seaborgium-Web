@@ -3,7 +3,6 @@ import {
   Alert,
   AlertColor,
   Box,
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -13,9 +12,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { CenterPageLoading } from "../../components/ui/page-loading/PageLoading";
 import { AdvancedSideBar } from "../../components/ui/side-bar/AdvancedSideBar";
-import SideBar from "../../components/ui/side-bar/SideBar";
 import { ProductResultModel } from "../../datas/response-models/ProductResultModel";
 import { ProductApiService } from "../../services/api-service/ProductApiService";
 import { DefaultTextConst } from "../../utils/consts/DefaultTextConst";
@@ -39,7 +36,7 @@ export default function ProductPage() {
   let { id } = useParams();
 
   const isEditingPage = (): boolean =>
-    product != null && product.id != undefined && product.id > 0;
+    product?.id != null && product.id > 0;
 
   const isAddingPage = (): boolean => !isEditingPage();
 
@@ -71,7 +68,7 @@ export default function ProductPage() {
 
   useEffect(() => {
     getProductsHandle();
-  }, []);
+  });
 
   function productSaveHandle() {
     setSaveButtonLoading(true);
@@ -117,22 +114,21 @@ export default function ProductPage() {
   }
 
   return (
-    <AdvancedSideBar isLoading={pageLoading} >
+    <AdvancedSideBar isLoading={pageLoading}>
       <>
-      <PageContent
-              productModel={product}
-              handleChange={handleProductChange}
-              isAddingPage={isAddingPage()}
-              saveButtonHandle={productSaveHandle}
-              isSaveButtonLoading={isSaveButtonLoading}
-            />
-      <AlertSnackBar
-            alertText={alertText}
-            closeHandle={() => setAlertText(null)}
-            severity={alertColor}
-          />
+        <PageContent
+          productModel={product}
+          handleChange={handleProductChange}
+          isAddingPage={isAddingPage()}
+          saveButtonHandle={productSaveHandle}
+          isSaveButtonLoading={isSaveButtonLoading}
+        />
+        <AlertSnackBar
+          alertText={alertText}
+          closeHandle={() => setAlertText(null)}
+          severity={alertColor}
+        />
       </>
-
     </AdvancedSideBar>
   );
 }

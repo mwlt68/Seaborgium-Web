@@ -15,12 +15,9 @@ export default function LoginPage() {
   const [loginButtonEnable, setLoginButtonEnable] = useState(true);
   const navigate = useNavigate();
 
-  
-
   const handleLogin = async () => {
     setLoginButtonEnable(false);
-    AuthenticationApiService
-      .login(username, password)
+    AuthenticationApiService.login(username, password)
       .then((loginResponse) => {
         if (
           loginResponse?.result?.token &&
@@ -47,14 +44,10 @@ export default function LoginPage() {
 
   return (
     <Box sx={styles.background}>
-      <Box
-        sx={styles.container}
-      >
+      <Box sx={styles.container}>
         <h1 style={styles.header}>{ProjectConsts.Name}</h1>
 
-        <Box
-          sx={styles.input}
-        >
+        <Box sx={styles.input}>
           {errorMessage && (
             <h3 style={styles.errorMessageText}>{errorMessage}</h3>
           )}

@@ -5,17 +5,17 @@ export const styles = {
     display: "flex",
     flexDirection: "column",
     height: "100%",
-    justifyContent:"center",
-    alignItems:"center",
+    justifyContent: "center",
+    alignItems: "center",
   },
   saveButton: {
-    color :"black",
+    color: "black",
     backgroundColor: ColorConsts.LightBeige,
-    padding:"0.5rem 15%"
+    padding: "0.5rem 15%",
   },
   productCard: {
-    padding:"1rem",
-    width:"50%"
+    padding: "1rem",
+    width: "50%",
   },
   productCardAction: {
     display: "flex",
@@ -25,14 +25,14 @@ export const styles = {
   productCardImage: {
     objectFit: "contain",
   },
-  productCardContent:{
+  productCardContent: {
     display: "flex",
     flexGrow: 1,
     flexDirection: "column",
-    gap:"1.5rem"
+    gap: "1.5rem",
   },
-  cardActions:{
-    display:"flex",
-    justifyContent:"center",
-  }
+  cardActions: {
+    display: "flex",
+    justifyContent: "center",
+  },
 };
