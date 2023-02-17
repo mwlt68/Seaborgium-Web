@@ -16,17 +16,27 @@ const styles = {
         gap: "1rem"
     },
 }
-
-function PageLoading(){
-    return <Lottie animationData={groovyWalkAnimation} loop={true} style={styles.lottie}/>
+type Props = {
+    children: any;
+    isLoading:boolean;
 }
 
-function CenterPageLoading(){
-    return(
-        <Box sx={styles.container}>
-            <Lottie animationData={groovyWalkAnimation} loop={true} style={styles.lottie}/>
-        </Box>
-    ) 
+function PageLoading(props: Props){
+    if(props.isLoading){
+        return <Lottie animationData={groovyWalkAnimation} loop={true} style={styles.lottie}/>
+    }
+    else return props.children;
+}
+
+function CenterPageLoading(props: Props){
+    if(props.isLoading){
+        return(
+            <Box sx={styles.container}>
+                <Lottie animationData={groovyWalkAnimation} loop={true} style={styles.lottie}/>
+            </Box>
+        ) 
+    }
+    else return props.children;
 }
 
 export { PageLoading , CenterPageLoading}
