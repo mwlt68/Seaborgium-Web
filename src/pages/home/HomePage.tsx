@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { NavigationConsts } from "../../utils/consts/NavigationConsts";
 import {CenterPageLoading} from "../../components/ui/page-loading/PageLoading";
 import { ErrorPageWithLottie } from "../../components/ui/error-page/ErrorPageWithLottie";
+import { AdvancedSideBar } from "../../components/ui/side-bar/AdvancedSideBar";
 
 
 export default function HomePage() {
@@ -56,15 +57,9 @@ export default function HomePage() {
 
 
   return (
-    <SideBar>
-      {
-        pageLoading ? 
-          <CenterPageLoading/>
-          : pageLoadingError ? 
-            <ErrorPageWithLottie message={pageLoadingError}/>
-            : <PageContent/>
-      }
-    </SideBar>
+    <AdvancedSideBar errorMessage={pageLoadingError} isLoading={pageLoading} >
+      <PageContent/>
+    </AdvancedSideBar>
   );
   
 
