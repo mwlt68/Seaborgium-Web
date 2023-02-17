@@ -8,8 +8,8 @@ import {
   BaseResultModel,
   NullableBaseResultModel,
 } from "../../datas/response-models/BaseResultModel";
+import { ValidationErrorResponseModel } from "../../datas/response-models/ValidationErrorResponseModel";
 import { AuthManager } from "../../utils/helpers/AuthManager";
-
 
 export abstract class ApiBaseService {
   static readonly BaseUrl: string = "https://localhost:7175";
@@ -23,9 +23,8 @@ export abstract class ApiBaseService {
     path: string,
     data?: ReqModel,
     params?: URLSearchParams,
-    automaticUnauthRedirect:boolean=true
+    automaticUnauthRedirect: boolean = true
   ): Promise<BaseResponseModel<ResModel | null>> {
-
     this.isBusy = true;
     let isUnauthorized: boolean = false;
 
@@ -44,24 +43,30 @@ export abstract class ApiBaseService {
       .then((response) => {
         return response.data as BaseResponseModel<ResModel>;
       })
-      .catch((err: Error | AxiosError) => {
+      .catch((err: AxiosError<any, any>) => {
+        const errorStatus = err?.response?.status ?? 0;
+        const errorData = err?.response?.data;
         isUnauthorized =
           automaticUnauthRedirect &&
-          err instanceof AxiosError &&
-          (err?.response?.status === 401 || err?.response?.status === 403);
-
-        if (
-          err instanceof AxiosError &&
-          err?.response?.data?.exceptionContent != null
-        ) {
-          return err.response.data as BaseResponseModel<ResModel | null>;
-        } else {
-          return new BaseResponseModel<ResModel | null>(
-            true,
-            null,
-            err.message
-          );
+          (errorStatus === 401 || errorStatus === 403);
+        debugger;
+        if (errorData != null) {
+          const isBaseResponse =
+            err instanceof AxiosError<BaseResponseModel<ResModel | null>, any>;
+          const isValidationError =
+            err instanceof AxiosError<ValidationErrorResponseModel, any>;
+          debugger;
+          if (errorStatus === 400 && isValidationError) {
+            debugger;
+            return BaseResponseModel.fromValidationErrors(
+              errorData as ValidationErrorResponseModel
+            );
+          } else if (isBaseResponse) {
+            debugger;
+            return errorData as BaseResponseModel<ResModel | null>;
+          }
         }
+        return BaseResponseModel.fromError(err?.message ?? "Undefined Error !");
       });
     if (isUnauthorized) {
       AuthManager.logout();
@@ -76,16 +81,45 @@ export abstract class ApiBaseService {
   >(
     path: string,
     data?: ReqModel,
-    automaticUnauthRedirect:boolean=true
+    automaticUnauthRedirect: boolean = true
   ): Promise<BaseResponseModel<ResModel | null>> {
-    return this.SendRequest<ReqModel, ResModel>("post", path, data,undefined,automaticUnauthRedirect);
+    return this.SendRequest<ReqModel, ResModel>(
+      "post",
+      path,
+      data,
+      undefined,
+      automaticUnauthRedirect
+    );
+  }
+
+  static async Put<
+    ReqModel extends BaseRequestModel,
+    ResModel extends BaseResultModel
+  >(
+    path: string,
+    data?: ReqModel,
+    automaticUnauthRedirect: boolean = true
+  ): Promise<BaseResponseModel<ResModel | null>> {
+    return this.SendRequest<ReqModel, ResModel>(
+      "put",
+      path,
+      data,
+      undefined,
+      automaticUnauthRedirect
+    );
   }
 
   static async Get<ResModel extends BaseResultModel>(
     path: string,
     params?: URLSearchParams,
-    automaticUnauthRedirect:boolean=true
+    automaticUnauthRedirect: boolean = true
   ): Promise<BaseResponseModel<ResModel | null>> {
-    return this.SendRequest<null, ResModel>("get", path, null, params,automaticUnauthRedirect);
+    return this.SendRequest<null, ResModel>(
+      "get",
+      path,
+      null,
+      params,
+      automaticUnauthRedirect
+    );
   }
 }
