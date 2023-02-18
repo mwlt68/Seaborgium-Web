@@ -16,8 +16,9 @@ import { useEffect, useState } from "react";
 import { ProductApiService } from "../../services/api-service/ProductApiService";
 import { AuthManager } from "../../utils/helpers/AuthManager";
 import { useNavigate } from "react-router-dom";
-import { NavigationConsts } from "../../utils/consts/NavigationConsts";
+import { NavigationConsts, QueryParameterConsts } from "../../utils/consts/NavigationConsts";
 import { AdvancedSideBar } from "../../components/ui/side-bar/AdvancedSideBar";
+import { UrlHelper } from "../../utils/helpers/UrlHelper";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -28,7 +29,6 @@ export default function HomePage() {
   function getProducts() {
     ProductApiService.GetProducts()
       .then((res) => {
-        debugger;
         if (res?.result && !res.hasException) {
           setProducts(res.result);
         } else {
@@ -49,7 +49,7 @@ export default function HomePage() {
 
   useEffect(() => {
     getProducts();
-  });
+  }, []);
 
   return (
     <AdvancedSideBar errorMessage={pageLoadingError} isLoading={pageLoading}>
@@ -59,66 +59,95 @@ export default function HomePage() {
 
   function PageContent() {
     return (
-      <Box sx={styles.container}>
+      <Box sx={styles.container} >
         <Card sx={styles.headerCart}>
-          <Button
-            style={styles.headerCartAddButton}
-            variant="contained"
-            startIcon={<AddCircleIcon />}
-          >
-            Product Add
-          </Button>
+          <ProductAddingButton />
         </Card>
-        <Box sx={styles.content}>{products.map((x) => ProductCart(x))}</Box>
+        <Box sx={styles.content}>{products.map((x) => <ProductCart product={x}/>)}</Box>
       </Box>
     );
   }
 
-  function ProductCart(product: ProductResultModel) {
+  function ProductAddingButton() {
     return (
-      <Card sx={styles.productCard}>
-        <CardActionArea>
-          <ProductCardMedia />
-          <ProductCardContent />
-          <ProductCardAction />
-        </CardActionArea>
-      </Card>
+      <Button
+        onClick={event=>{
+          navigate(NavigationConsts.ProductPage);
+        }}
+        style={styles.headerCartAddButton}
+        variant="contained"
+        startIcon={<AddCircleIcon />}
+      >
+        Product Add
+      </Button>
     );
-
-    function ProductCardMedia() {
-      return (
-        <CardMedia
-          component="img"
-          height="250"
-          image="https://img-lcwaikiki.mncdn.com/mnresize/1024/-/pim/productimages/20222/6012505/v1/l_20222-w2cg02z8-rfh-96-81-93-190_a.jpg"
-          sx={styles.productCardImage}
-        />
-      );
-    }
-
-    function ProductCardContent() {
-      return (
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {product.category}
-          </Typography>
-          <Typography variant="subtitle1">{product.brand}</Typography>
-          <Typography variant="body2" color="text.secondary">
-            {product.name}
-          </Typography>
-        </CardContent>
-      );
-    }
-
-    function ProductCardAction() {
-      return (
-        <CardActions sx={styles.productCardAction}>
-          <Typography variant="subtitle1" color="green">
-            {product.price} ₺
-          </Typography>
-          <EditIcon color="inherit" />
-        </CardActions>
-      );
-    }
   }
+
+  
+  function productCardClickHandle(id:number){
+    const productDetailUrl = UrlHelper.Create(NavigationConsts.ProductPage,QueryParameterConsts.ProductPage.Id,id.toString())
+    navigate(productDetailUrl);
+  }
+
+  function ProductCart(props :{product: ProductResultModel}) {
+    return (
+      <CardActionArea key={props.product.id} sx={styles.productCard} onClick={event=>{productCardClickHandle(props.product.id ?? -1)}}>
+        <Card>
+          <ProductCardMedia />
+          <ProductCardContent product={props.product} />
+          <ProductCardAction productPrice={props.product.price}/>
+        </Card>
+      </CardActionArea>
+    );
+  }
+
+  function ProductCardMedia() {
+    return (
+      <CardMedia
+        component="img"
+        height={styles.productImage.height}
+        image="https://img-lcwaikiki.mncdn.com/mnresize/1024/-/pim/productimages/20222/6012505/v1/l_20222-w2cg02z8-rfh-96-81-93-190_a.jpg"
+        sx={styles.productCardImage}
+      />
+    );
+  }
+
+  function ProductCardContent(props :{product: ProductResultModel}) {
+    return (
+      <CardContent sx={styles.productCardContent}>
+        <Typography
+          noWrap
+          gutterBottom
+          variant="h5"
+          component="div"
+          sx={styles.contentTypography}
+        >
+          {props.product.category}
+        </Typography>
+        <Typography noWrap variant="subtitle1" sx={styles.contentTypography}>
+          {props.product.brand}
+        </Typography>
+        <Typography
+          noWrap
+          variant="body2"
+          color="text.secondary"
+          sx={styles.contentTypography}
+        >
+          {props.product.name}
+        </Typography>
+      </CardContent>
+    );
+  }
+
+  function ProductCardAction(props:{productPrice:number|undefined}) {
+    return (
+      <CardActions sx={styles.productCardAction}>
+        <Typography variant="subtitle1" color="green">
+          {props.productPrice} ₺
+        </Typography>
+        <EditIcon color="inherit" />
+      </CardActions>
+    );
+  }
+
 }

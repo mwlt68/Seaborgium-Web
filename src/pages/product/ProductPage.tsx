@@ -11,16 +11,20 @@ import {
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { AdvancedSideBar } from "../../components/ui/side-bar/AdvancedSideBar";
 import { ProductResultModel } from "../../datas/response-models/ProductResultModel";
 import { ProductApiService } from "../../services/api-service/ProductApiService";
 import { DefaultTextConst } from "../../utils/consts/DefaultTextConst";
-import { NavigationConsts } from "../../utils/consts/NavigationConsts";
+import {
+  NavigationConsts,
+  QueryParameterConsts,
+} from "../../utils/consts/NavigationConsts";
 import { AuthManager } from "../../utils/helpers/AuthManager";
 import { styles } from "./ProductPageStyle";
 
 export default function ProductPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [pageLoading, setPageLoading] = useState(true);
   const [isSaveButtonLoading, setSaveButtonLoading] = useState(false);
   const [alertText, setAlertText] = useState<null | string>(null);
@@ -33,10 +37,8 @@ export default function ProductPage() {
   const productEditingSuccessMessage =
     "Congratulations, your product editing was successful.";
   const navigate = useNavigate();
-  let { id } = useParams();
 
-  const isEditingPage = (): boolean =>
-    product?.id != null && product.id > 0;
+  const isEditingPage = (): boolean => product?.id != null && product.id > 0;
 
   const isAddingPage = (): boolean => !isEditingPage();
 
@@ -44,8 +46,9 @@ export default function ProductPage() {
     isAddingPage() ? productAddingSuccessMessage : productEditingSuccessMessage;
 
   function getProductsHandle() {
-    if (id) {
-      ProductApiService.GetProduct(id)
+    const productId = searchParams.get(QueryParameterConsts.ProductPage.Id);
+    if (productId) {
+      ProductApiService.GetProduct(productId)
         .then((res) => {
           if (res?.result && !res.hasException) {
             setProduct(res.result);
@@ -68,7 +71,7 @@ export default function ProductPage() {
 
   useEffect(() => {
     getProductsHandle();
-  });
+  }, []);
 
   function productSaveHandle() {
     setSaveButtonLoading(true);
@@ -79,11 +82,11 @@ export default function ProductPage() {
       .then((productResult) => {
         if (productResult?.result && !productResult.hasException) {
           if (isAddingPage()) {
-            const newUrl = [
-              NavigationConsts.ProductAddPage,
-              productResult.result.id,
-            ].join("/");
-            window.history.replaceState(null, DefaultTextConst.Empty, newUrl);
+            searchParams.set(
+              QueryParameterConsts.ProductPage.Id,
+              productResult.result.id!.toString()
+            );
+            setSearchParams(searchParams);
           }
           setProduct(productResult.result);
           setAlertText(getSaveSuccessMessage());

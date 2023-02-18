@@ -19,11 +19,7 @@ function App() {
           <Route element={<HomePage />} path={NavigationConsts.HomePage} />
           <Route
             element={<ProductPage />}
-            path={NavigationConsts.ProductAddPage}
-          />
-          <Route
-            element={<ProductPage />}
-            path={NavigationConsts.ProductEditPage}
+            path={NavigationConsts.ProductPage}
           />
         </Route>
       </Routes>
