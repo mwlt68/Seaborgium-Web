@@ -1,13 +1,11 @@
 import LoadingButton from "@mui/lab/LoadingButton/LoadingButton";
 import {
-  Alert,
   AlertColor,
   Box,
   Card,
   CardActions,
   CardContent,
   CardMedia,
-  Snackbar,
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -15,7 +13,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { AdvancedSideBar } from "../../components/ui/side-bar/AdvancedSideBar";
 import { ProductResultModel } from "../../datas/response-models/ProductResultModel";
 import { ProductApiService } from "../../services/api-service/ProductApiService";
-import { DefaultTextConst } from "../../utils/consts/DefaultTextConst";
 import {
   NavigationConsts,
   QueryParameterConsts,
@@ -27,7 +24,7 @@ export default function ProductPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [pageLoading, setPageLoading] = useState(true);
   const [isSaveButtonLoading, setSaveButtonLoading] = useState(false);
-  const [alertText, setAlertText] = useState<null | string>(null);
+  const [alertText, setAlertText] = useState<undefined | string>(undefined);
   const [alertColor, setAlertColor] = useState<AlertColor>("error");
   const [product, setProduct] = useState<ProductResultModel>(
     new ProductResultModel()
@@ -115,10 +112,9 @@ export default function ProductPage() {
       [event.target.name]: event.target.value,
     });
   }
-
+  debugger
   return (
-    <AdvancedSideBar isLoading={pageLoading}>
-      <>
+    <AdvancedSideBar isLoading={pageLoading} alertColor={alertColor} alertText={alertText} alertCloseHandler={() => setAlertText(undefined)}>
         <PageContent
           productModel={product}
           handleChange={handleProductChange}
@@ -126,38 +122,11 @@ export default function ProductPage() {
           saveButtonHandle={productSaveHandle}
           isSaveButtonLoading={isSaveButtonLoading}
         />
-        <AlertSnackBar
-          alertText={alertText}
-          closeHandle={() => setAlertText(null)}
-          severity={alertColor}
-        />
-      </>
     </AdvancedSideBar>
   );
 }
 
-function AlertSnackBar(props: {
-  alertText: string | null;
-  closeHandle: Function;
-  severity?: AlertColor;
-  autoHideDuration?: number;
-}) {
-  return (
-    <Snackbar
-      open={props.alertText != null}
-      autoHideDuration={props.autoHideDuration ?? 4000}
-      onClose={(e) => props.closeHandle()}
-      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-    >
-      <Alert
-        severity={props.severity ?? "error"}
-        sx={{ width: "100%", whiteSpace: "pre-line" }}
-      >
-        {props.alertText}
-      </Alert>
-    </Snackbar>
-  );
-}
+
 
 function PageContent(props: {
   productModel: ProductResultModel;
