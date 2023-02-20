@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, IconButton } from "@mui/material";
 import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -9,6 +9,7 @@ import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import { ProjectConsts } from "../../../utils/consts/ProjectConsts";
 import { NavigationConsts } from "../../../utils/consts/NavigationConsts";
 import { styles } from "./SideBarStyle";
+import { AuthManager } from "../../../utils/helpers/AuthManager";
 
 export default function SideBar(props:any) {
   
@@ -21,6 +22,7 @@ export default function SideBar(props:any) {
     toggleSidebar();
     collapseSidebar();
   };
+  const navigate = useNavigate();
 
   return (
     <Box sx={styles.container}>
@@ -67,12 +69,18 @@ export default function SideBar(props:any) {
     );
   }
 
+  function SignOutClickHandle(){
+    AuthManager.logout();
+    navigate(NavigationConsts.LoginPage)
+  }
+
   function SideBarFooter() {
     return (
       <Button
         style={styles.signOutButton}
         variant="contained"
         startIcon={!toggled && <LogoutIcon style={styles.signOutButtonIcon} />}
+        onClick= {SignOutClickHandle}
       >
         Sign Out
       </Button>
