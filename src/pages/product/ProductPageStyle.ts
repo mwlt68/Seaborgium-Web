@@ -13,6 +13,11 @@ export const styles = {
     backgroundColor: ColorConsts.LightBeige,
     padding: "0.5rem 15%",
   },
+  deleteButton:{
+    color: "black",
+    backgroundColor: "#ff6961",
+    padding: "0.5rem 15%",
+  },
   productCard: {
     padding: "1rem",
     width: "50%",
@@ -31,8 +36,12 @@ export const styles = {
     flexDirection: "column",
     gap: "1.5rem",
   },
-  cardActions: {
+  addingCardActions: {
     display: "flex",
     justifyContent: "center",
+  },
+  editingCardActions: {
+    display: "flex",
+    justifyContent: "space-between",
   },
 };

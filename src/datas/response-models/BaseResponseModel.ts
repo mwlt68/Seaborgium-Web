@@ -2,7 +2,7 @@ import { BaseResultModel } from "./BaseResultModel";
 import { ValidationErrorResponseModel } from "./ValidationErrorResponseModel";
 
 
-type NullableBaseResultModel = BaseResultModel | null;
+type NullableBaseResultModel = BaseResultModel | null | boolean;
 
 export class BaseResponseModel<Model extends NullableBaseResultModel> {
     hasException : boolean;

@@ -27,7 +27,7 @@ export default function HomePage() {
   const [products, setProducts] = useState<ProductResultModel[]>([]);
 
   function getProducts() {
-    ProductApiService.GetProducts()
+    ProductApiService.getAll()
       .then((res) => {
         if (res?.result && !res.hasException) {
           setProducts(res.result);

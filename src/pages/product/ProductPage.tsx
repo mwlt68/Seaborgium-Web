@@ -11,28 +11,27 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { AdvancedSideBar } from "../../components/ui/side-bar/AdvancedSideBar";
+import { BaseResponseModel } from "../../datas/response-models/BaseResponseModel";
 import { ProductResultModel } from "../../datas/response-models/ProductResultModel";
+import ApiRequestCatchAndFinalize from "../../services/api-service/ApiRequestCatchAndFinalize";
 import { ProductApiService } from "../../services/api-service/ProductApiService";
+import { DefaultTextConst } from "../../utils/consts/DefaultTextConst";
 import {
   NavigationConsts,
   QueryParameterConsts,
 } from "../../utils/consts/NavigationConsts";
-import { AuthManager } from "../../utils/helpers/AuthManager";
 import { styles } from "./ProductPageStyle";
 
 export default function ProductPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [pageLoading, setPageLoading] = useState(true);
-  const [isSaveButtonLoading, setSaveButtonLoading] = useState(false);
+  const [isButtonLoading, setButtonLoading] = useState(false);
   const [alertText, setAlertText] = useState<undefined | string>(undefined);
   const [alertColor, setAlertColor] = useState<AlertColor>("error");
   const [product, setProduct] = useState<ProductResultModel>(
     new ProductResultModel()
   );
-  const productAddingSuccessMessage =
-    "Congratulations, your product addition was successful.";
-  const productEditingSuccessMessage =
-    "Congratulations, your product editing was successful.";
+
   const navigate = useNavigate();
 
   const isEditingPage = (): boolean => product?.id != null && product.id > 0;
@@ -40,69 +39,101 @@ export default function ProductPage() {
   const isAddingPage = (): boolean => !isEditingPage();
 
   const getSaveSuccessMessage = (): string =>
-    isAddingPage() ? productAddingSuccessMessage : productEditingSuccessMessage;
+    isAddingPage() ? DefaultTextConst.ProductAddingSuccessMessage : DefaultTextConst.ProductEditingSuccessMessage;
 
-  function getProductsHandle() {
+  function getProductHandle() {
     const productId = searchParams.get(QueryParameterConsts.ProductPage.Id);
     if (productId) {
-      ProductApiService.GetProduct(productId)
-        .then((res) => {
-          if (res?.result && !res.hasException) {
-            setProduct(res.result);
-          }
-        })
-        .catch((err: Error) => {
-          console.log("Page loading error : " + err.message);
-        })
-        .finally(() => {
-          if (AuthManager.hasNotToken()) {
-            navigate(NavigationConsts.LoginPage);
-          } else {
-            setPageLoading(false);
-          }
-        });
+      ApiRequestCatchAndFinalize(
+        ProductApiService.get(productId),
+        getProductResponseHandle,
+        setPageLoading,
+        navigate
+      );
     } else {
       setPageLoading(false);
     }
   }
-
+  const getProductResponseHandle = (
+    res: BaseResponseModel<ProductResultModel | null>
+  ) => {
+    if (res?.result && !res.hasException) {
+      setProduct(res.result);
+    }
+  };
   useEffect(() => {
-    getProductsHandle();
+    getProductHandle();
   }, []);
 
   function productSaveHandle() {
-    setSaveButtonLoading(true);
+    setButtonLoading(true);
     let productSave;
     if (isAddingPage()) productSave = ProductApiService.insert(product);
     else productSave = ProductApiService.update(product);
-    productSave
-      .then((productResult) => {
-        if (productResult?.result && !productResult.hasException) {
-          if (isAddingPage()) {
-            searchParams.set(
-              QueryParameterConsts.ProductPage.Id,
-              productResult.result.id!.toString()
-            );
-            setSearchParams(searchParams);
-          }
-          setProduct(productResult.result);
-          setAlertText(getSaveSuccessMessage());
-          setAlertColor("success");
-        } else if (
-          productResult.hasException &&
-          productResult.exceptionContent != null
-        ) {
-          setAlertColor("error");
-          setAlertText(productResult.exceptionContent!);
-        }
-      })
-      .catch((err: Error) => {
-        console.log("Page loading error : " + err.message);
-      })
-      .finally(() => {
-        setSaveButtonLoading(false);
-      });
+    ApiRequestCatchAndFinalize(
+      productSave,
+      productSaveResponseHandle,
+      setButtonLoading,
+      navigate
+    );
   }
+
+  const productSaveResponseHandle = (
+    productResult: BaseResponseModel<ProductResultModel | null>
+  ) => {
+    if (productResult?.result && !productResult.hasException) {
+      if (isAddingPage()) {
+        searchParams.set(
+          QueryParameterConsts.ProductPage.Id,
+          productResult.result.id!.toString()
+        );
+        setSearchParams(searchParams);
+      }
+      setProduct(productResult.result);
+      setAlertText(getSaveSuccessMessage());
+      setAlertColor("success");
+    } else if (
+      productResult.hasException &&
+      productResult.exceptionContent != null
+    ) {
+      setAlertColor("error");
+      setAlertText(productResult.exceptionContent!);
+    }
+  };
+
+  function productDeleteHandle() {
+    if (product.id) {
+      setButtonLoading(true);
+      ApiRequestCatchAndFinalize(
+        ProductApiService.delete(product.id!.toString()),
+        productDeleteResponseHandle,
+        setButtonLoading,
+        navigate
+      );
+    }
+  }
+
+  const productDeleteResponseHandle = async (
+    productResult: BaseResponseModel<boolean | null>
+  ) => {
+    debugger;
+    if (productResult?.result && !productResult.hasException) {
+      debugger;
+      setAlertText(DefaultTextConst.ProductDeleteSuccessMessage);
+      setAlertColor("success");
+      await new Promise((resolve) =>
+        setTimeout(() => {
+          navigate(NavigationConsts.HomePage);
+        }, 2000)
+      );
+    } else if (
+      productResult.hasException &&
+      productResult.exceptionContent != null
+    ) {
+      setAlertColor("error");
+      setAlertText(productResult.exceptionContent!);
+    }
+  };
 
   function handleProductChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -112,26 +143,31 @@ export default function ProductPage() {
       [event.target.name]: event.target.value,
     });
   }
-  debugger
+  debugger;
   return (
-    <AdvancedSideBar isLoading={pageLoading} alertColor={alertColor} alertText={alertText} alertCloseHandler={() => setAlertText(undefined)}>
-        <PageContent
-          productModel={product}
-          handleChange={handleProductChange}
-          isAddingPage={isAddingPage()}
-          saveButtonHandle={productSaveHandle}
-          isSaveButtonLoading={isSaveButtonLoading}
-        />
+    <AdvancedSideBar
+      isLoading={pageLoading}
+      alertColor={alertColor}
+      alertText={alertText}
+      alertCloseHandler={() => setAlertText(undefined)}
+    >
+      <PageContent
+        productModel={product}
+        handleChange={handleProductChange}
+        isAddingPage={isAddingPage()}
+        saveButtonHandle={productSaveHandle}
+        isSaveButtonLoading={isButtonLoading}
+        deleteButtonHandle={productDeleteHandle}
+      />
     </AdvancedSideBar>
   );
 }
-
-
 
 function PageContent(props: {
   productModel: ProductResultModel;
   handleChange: Function;
   saveButtonHandle: Function;
+  deleteButtonHandle: Function;
   isAddingPage: boolean;
   isSaveButtonLoading: boolean;
 }) {
@@ -143,6 +179,7 @@ function PageContent(props: {
         isAddingPage={props.isAddingPage}
         saveButtonHandle={props.saveButtonHandle}
         isSaveButtonLoading={props.isSaveButtonLoading}
+        deleteButtonHandle={props.deleteButtonHandle}
       />
     </Box>
   );
@@ -152,6 +189,7 @@ function ProductCard(props: {
   handleChange: Function;
   isAddingPage: boolean;
   saveButtonHandle: Function;
+  deleteButtonHandle: Function;
   isSaveButtonLoading: boolean;
 }) {
   return (
@@ -165,6 +203,7 @@ function ProductCard(props: {
       <ProductCardActions
         isAddingPage={props.isAddingPage}
         saveButtonHandle={props.saveButtonHandle}
+        deleteButtonHandle={props.deleteButtonHandle}
         isLoading={props.isSaveButtonLoading}
       />
     </Card>
@@ -174,10 +213,29 @@ function ProductCard(props: {
 function ProductCardActions(props: {
   isAddingPage: boolean;
   saveButtonHandle: Function;
+  deleteButtonHandle: Function;
   isLoading: boolean;
 }) {
   return (
-    <CardActions sx={styles.cardActions}>
+    <CardActions
+      sx={
+        props.isAddingPage
+          ? styles.addingCardActions
+          : styles.editingCardActions
+      }
+    >
+      {!props.isAddingPage && (
+        <LoadingButton
+          loading={props.isLoading}
+          variant="contained"
+          loadingPosition="start"
+          onClick={(x) => props.deleteButtonHandle()}
+          style={styles.deleteButton}
+        >
+          Delete
+        </LoadingButton>
+      )}
+
       <LoadingButton
         loading={props.isLoading}
         variant="contained"

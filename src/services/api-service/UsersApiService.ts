@@ -12,7 +12,7 @@ export class UserApiService extends ApiBaseService {
   ): Promise<BaseResponseModel<LoginResponseModel | null>> {
     debugger;
     let registrationReqModel = new LoginRequestModel(username, password);
-    var result = await this.Post<LoginRequestModel, LoginResponseModel>(
+    var result = await this.postRequest<LoginRequestModel, LoginResponseModel>(
       this.registrationReqPath,
       registrationReqModel
     );

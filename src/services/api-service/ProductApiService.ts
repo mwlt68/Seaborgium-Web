@@ -3,45 +3,62 @@ import { ProductResultModel } from "../../datas/response-models/ProductResultMod
 import { ApiBaseService } from "./ApiBaseService";
 
 export class ProductApiService extends ApiBaseService {
+
   static readonly getAllProductsPath: string = "api/products/all";
   static readonly getProductPath: string = "api/products";
   static readonly productInsertPath: string = "api/products/insert";
   static readonly productUpdatePath: string = "api/products/update";
+  static readonly productDeletePath: string = "api/products/delete";
 
-  static async GetProducts(): Promise<
+  static async getAll(): Promise<
     BaseResponseModel<ProductResultModel[] | null>
   > {
-    var response = await this.Get<ProductResultModel[]>(
+    var response = await this.getRequest<ProductResultModel[]>(
       this.getAllProductsPath
     );
     return response;
   }
-  static async GetProduct(
+
+  static async get(
     id: string
   ): Promise<BaseResponseModel<ProductResultModel | null>> {
+    debugger;
     const paramater = new URLSearchParams({ id: id });
-    var response = await this.Get<ProductResultModel>(
+    var response = await this.getRequest<ProductResultModel>(
       this.getProductPath,
       paramater
     );
     return response;
   }
+
   static async insert(
     product: ProductResultModel
   ): Promise<BaseResponseModel<ProductResultModel | null>> {
-    var response = await this.Post<ProductResultModel, ProductResultModel>(
+    var response = await this.postRequest<ProductResultModel, ProductResultModel>(
       this.productInsertPath,
       product
     );
     debugger;
     return response;
   }
+
   static async update(
     product: ProductResultModel
   ): Promise<BaseResponseModel<ProductResultModel | null>> {
-    var response = await this.Put<ProductResultModel, ProductResultModel>(
+    var response = await this.putRequest<ProductResultModel, ProductResultModel>(
       this.productUpdatePath,
       product
+    );
+    debugger;
+    return response;
+  }
+
+  static async delete(
+    id: string
+  ): Promise<BaseResponseModel<boolean | null>> {
+    var response = await this.deleteRequest(
+      this.productDeletePath,
+      id
     );
     debugger;
     return response;
