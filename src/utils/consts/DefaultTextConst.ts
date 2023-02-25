@@ -3,10 +3,10 @@ export class DefaultTextConst {
   static Empty = "";
 
   static ProductAddingSuccessMessage =
-  "Congratulations, your product addition was successful.";
+    "Congratulations, your product addition was successful.";
   static ProductEditingSuccessMessage =
-  "Congratulations, your product editing was successful.";
+    "Congratulations, your product editing was successful.";
 
   static ProductDeleteSuccessMessage =
-  "Congratulations, your product deleting was successful.";
+    "Congratulations, your product deleting was successful.";
 }

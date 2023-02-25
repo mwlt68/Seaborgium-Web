@@ -11,8 +11,7 @@ import { NavigationConsts } from "../../../utils/consts/NavigationConsts";
 import { styles } from "./SideBarStyle";
 import { AuthManager } from "../../../utils/helpers/AuthManager";
 
-export default function SideBar(props:any) {
-  
+export default function SideBar(props: any) {
   const menuItems = { home: "Home", contact: "Contacts" };
 
   const { collapseSidebar, toggleSidebar, collapsed, toggled } =
@@ -34,9 +33,7 @@ export default function SideBar(props:any) {
           <SideBarFooter />
         </Box>
       </Sidebar>
-      <main style={styles.main}>
-        {props.children}
-      </main>
+      <main style={styles.main}>{props.children}</main>
     </Box>
   );
 
@@ -69,9 +66,9 @@ export default function SideBar(props:any) {
     );
   }
 
-  function SignOutClickHandle(){
+  function SignOutClickHandle() {
     AuthManager.logout();
-    navigate(NavigationConsts.LoginPage)
+    navigate(NavigationConsts.LoginPage);
   }
 
   function SideBarFooter() {
@@ -80,7 +77,7 @@ export default function SideBar(props:any) {
         style={styles.signOutButton}
         variant="contained"
         startIcon={!toggled && <LogoutIcon style={styles.signOutButtonIcon} />}
-        onClick= {SignOutClickHandle}
+        onClick={SignOutClickHandle}
       >
         Sign Out
       </Button>

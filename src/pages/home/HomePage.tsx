@@ -16,7 +16,10 @@ import { useEffect, useState } from "react";
 import { ProductApiService } from "../../services/api-service/ProductApiService";
 import { AuthManager } from "../../utils/helpers/AuthManager";
 import { useNavigate } from "react-router-dom";
-import { NavigationConsts, QueryParameterConsts } from "../../utils/consts/NavigationConsts";
+import {
+  NavigationConsts,
+  QueryParameterConsts,
+} from "../../utils/consts/NavigationConsts";
 import { AdvancedSideBar } from "../../components/ui/side-bar/AdvancedSideBar";
 import { UrlHelper } from "../../utils/helpers/UrlHelper";
 
@@ -59,11 +62,15 @@ export default function HomePage() {
 
   function PageContent() {
     return (
-      <Box sx={styles.container} >
+      <Box sx={styles.container}>
         <Card sx={styles.headerCart}>
           <ProductAddingButton />
         </Card>
-        <Box sx={styles.content}>{products.map((x) => <ProductCart product={x}/>)}</Box>
+        <Box sx={styles.content}>
+          {products.map((x) => (
+            <ProductCart product={x} />
+          ))}
+        </Box>
       </Box>
     );
   }
@@ -71,7 +78,7 @@ export default function HomePage() {
   function ProductAddingButton() {
     return (
       <Button
-        onClick={event=>{
+        onClick={(event) => {
           navigate(NavigationConsts.ProductPage);
         }}
         style={styles.headerCartAddButton}
@@ -83,19 +90,28 @@ export default function HomePage() {
     );
   }
 
-  
-  function productCardClickHandle(id:number){
-    const productDetailUrl = UrlHelper.Create(NavigationConsts.ProductPage,QueryParameterConsts.ProductPage.Id,id.toString())
+  function productCardClickHandle(id: number) {
+    const productDetailUrl = UrlHelper.Create(
+      NavigationConsts.ProductPage,
+      QueryParameterConsts.ProductPage.Id,
+      id.toString()
+    );
     navigate(productDetailUrl);
   }
 
-  function ProductCart(props :{product: ProductResultModel}) {
+  function ProductCart(props: { product: ProductResultModel }) {
     return (
-      <CardActionArea key={props.product.id} sx={styles.productCard} onClick={event=>{productCardClickHandle(props.product.id ?? -1)}}>
+      <CardActionArea
+        key={props.product.id}
+        sx={styles.productCard}
+        onClick={(event) => {
+          productCardClickHandle(props.product.id ?? -1);
+        }}
+      >
         <Card>
           <ProductCardMedia />
           <ProductCardContent product={props.product} />
-          <ProductCardAction productPrice={props.product.price}/>
+          <ProductCardAction productPrice={props.product.price} />
         </Card>
       </CardActionArea>
     );
@@ -112,7 +128,7 @@ export default function HomePage() {
     );
   }
 
-  function ProductCardContent(props :{product: ProductResultModel}) {
+  function ProductCardContent(props: { product: ProductResultModel }) {
     return (
       <CardContent sx={styles.productCardContent}>
         <Typography
@@ -139,7 +155,7 @@ export default function HomePage() {
     );
   }
 
-  function ProductCardAction(props:{productPrice:number|undefined}) {
+  function ProductCardAction(props: { productPrice: number | undefined }) {
     return (
       <CardActions sx={styles.productCardAction}>
         <Typography variant="subtitle1" color="green">
@@ -149,5 +165,4 @@ export default function HomePage() {
       </CardActions>
     );
   }
-
 }

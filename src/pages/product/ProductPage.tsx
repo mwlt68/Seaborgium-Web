@@ -39,7 +39,9 @@ export default function ProductPage() {
   const isAddingPage = (): boolean => !isEditingPage();
 
   const getSaveSuccessMessage = (): string =>
-    isAddingPage() ? DefaultTextConst.ProductAddingSuccessMessage : DefaultTextConst.ProductEditingSuccessMessage;
+    isAddingPage()
+      ? DefaultTextConst.ProductAddingSuccessMessage
+      : DefaultTextConst.ProductEditingSuccessMessage;
 
   function getProductHandle() {
     const productId = searchParams.get(QueryParameterConsts.ProductPage.Id);
