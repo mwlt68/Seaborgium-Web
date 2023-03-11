@@ -5,17 +5,18 @@ import {
   Card,
   CardActions,
   CardContent,
-  CardMedia,
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { ImagePicker } from "../../components/ui/image-picker/ImagePicker";
 import { AdvancedSideBar } from "../../components/ui/side-bar/AdvancedSideBar";
 import { BaseResponseModel } from "../../datas/response-models/BaseResponseModel";
 import { ProductResultModel } from "../../datas/response-models/ProductResultModel";
 import ApiRequestCatchAndFinalize from "../../services/api-service/ApiRequestCatchAndFinalize";
 import { ProductApiService } from "../../services/api-service/ProductApiService";
 import { DefaultTextConst } from "../../utils/consts/DefaultTextConst";
+
 import {
   NavigationConsts,
   QueryParameterConsts,
@@ -60,9 +61,11 @@ export default function ProductPage() {
     res: BaseResponseModel<ProductResultModel | null>
   ) => {
     if (res?.result && !res.hasException) {
+      debugger;
       setProduct(res.result);
     }
   };
+
   useEffect(() => {
     getProductHandle();
   }, []);
@@ -145,7 +148,15 @@ export default function ProductPage() {
       [event.target.name]: event.target.value,
     });
   }
-  debugger;
+  const [file,setFile] = useState<File| undefined>(undefined)
+  function productImageChangeHandle(file: File) {
+    debugger;
+    setFile(file);
+    setProduct({
+      ...product,
+      ["image"]: file,
+    });
+  }
   return (
     <AdvancedSideBar
       isLoading={pageLoading}
@@ -160,6 +171,8 @@ export default function ProductPage() {
         saveButtonHandle={productSaveHandle}
         isSaveButtonLoading={isButtonLoading}
         deleteButtonHandle={productDeleteHandle}
+        productImageChangeHandle={productImageChangeHandle}
+        image={product.image}
       />
     </AdvancedSideBar>
   );
@@ -170,8 +183,10 @@ function PageContent(props: {
   handleChange: Function;
   saveButtonHandle: Function;
   deleteButtonHandle: Function;
+  productImageChangeHandle: Function;
   isAddingPage: boolean;
   isSaveButtonLoading: boolean;
+  image?: File;
 }) {
   return (
     <Box sx={styles.container}>
@@ -182,6 +197,8 @@ function PageContent(props: {
         saveButtonHandle={props.saveButtonHandle}
         isSaveButtonLoading={props.isSaveButtonLoading}
         deleteButtonHandle={props.deleteButtonHandle}
+        productImageChangeHandle={props.productImageChangeHandle}
+        image={props.image}
       />
     </Box>
   );
@@ -193,10 +210,15 @@ function ProductCard(props: {
   saveButtonHandle: Function;
   deleteButtonHandle: Function;
   isSaveButtonLoading: boolean;
+  productImageChangeHandle: Function;
+  image?: File;
 }) {
   return (
     <Card sx={styles.productCard}>
-      <ProductCardMedia />
+      <ImagePicker
+        image={props.image}
+        imageChangeHandle={props.productImageChangeHandle}
+      />
       <ProductCardContent
         productModel={props.productModel}
         handleChange={props.handleChange}
@@ -251,16 +273,6 @@ function ProductCardActions(props: {
   );
 }
 
-function ProductCardMedia() {
-  return (
-    <CardMedia
-      component="img"
-      height="250"
-      image="https://img-lcwaikiki.mncdn.com/mnresize/1024/-/pim/productimages/20222/6012505/v1/l_20222-w2cg02z8-rfh-96-81-93-190_a.jpg"
-      sx={styles.productCardImage}
-    />
-  );
-}
 
 function ProductCardContent(props: {
   productModel: ProductResultModel;

@@ -7,6 +7,7 @@ export class ProductResultModel extends BaseResultModel {
     brand:string|null=null;
     category:string|null=null;
     price:number=0;
+    image?:File=undefined;
     
     constructor(name:string|null=null,price:number=0,brand:string|null=null,category:string|null=null,stockQuantity:number=0)
     {

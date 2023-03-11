@@ -9,6 +9,7 @@ import {
   NullableBaseResultModel,
 } from "../../datas/response-models/BaseResultModel";
 import { ValidationErrorResponseModel } from "../../datas/response-models/ValidationErrorResponseModel";
+import { ContentType } from "../../utils/enums/ContentTypes";
 import { AuthManager } from "../../utils/helpers/AuthManager";
 
 export abstract class ApiBaseService {
@@ -21,6 +22,7 @@ export abstract class ApiBaseService {
     path: string,
     data?: any,
     params?: URLSearchParams,
+    contentType?: string,
     automaticUnauthRedirect: boolean = true
   ) {
     this.isBusy = true;
@@ -32,7 +34,7 @@ export abstract class ApiBaseService {
         url: path,
         method: method,
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": contentType ?? ContentType.json,
           Authorization: `Bearer ${AuthManager.getToken()}`,
         },
         data: data,
@@ -79,6 +81,7 @@ export abstract class ApiBaseService {
     path: string,
     data?: ReqModel,
     params?: URLSearchParams,
+    contentType?: string,
     automaticUnauthRedirect: boolean = true
   ): Promise<BaseResponseModel<ResModel | null>> {
     return this.sendRequestBase<BaseResponseModel<ResModel | null>>(
@@ -86,6 +89,7 @@ export abstract class ApiBaseService {
       path,
       data,
       params,
+      contentType,
       automaticUnauthRedirect
     );
   }
@@ -96,6 +100,7 @@ export abstract class ApiBaseService {
   >(
     path: string,
     data?: ReqModel,
+    contentType?: string,
     automaticUnauthRedirect: boolean = true
   ): Promise<BaseResponseModel<ResModel | null>> {
     return this.sendRequest<ReqModel, ResModel>(
@@ -103,6 +108,7 @@ export abstract class ApiBaseService {
       path,
       data,
       undefined,
+      contentType,
       automaticUnauthRedirect
     );
   }
@@ -113,6 +119,7 @@ export abstract class ApiBaseService {
   >(
     path: string,
     data?: ReqModel,
+    contentType?: string,
     automaticUnauthRedirect: boolean = true
   ): Promise<BaseResponseModel<ResModel | null>> {
     return this.sendRequest<ReqModel, ResModel>(
@@ -120,6 +127,7 @@ export abstract class ApiBaseService {
       path,
       data,
       undefined,
+      contentType,
       automaticUnauthRedirect
     );
   }
@@ -127,6 +135,7 @@ export abstract class ApiBaseService {
   static async deleteRequest(
     path: string,
     id: string,
+    contentType?: string,
     automaticUnauthRedirect: boolean = true
   ): Promise<BaseResponseModel<boolean | null>> {
     return this.sendRequestBase<BaseResponseModel<boolean | null>>(
@@ -134,6 +143,7 @@ export abstract class ApiBaseService {
       path,
       id,
       undefined,
+      contentType,
       automaticUnauthRedirect
     );
   }
@@ -141,6 +151,7 @@ export abstract class ApiBaseService {
   static async getRequest<ResModel extends BaseResultModel>(
     path: string,
     params?: URLSearchParams,
+    contentType?: string,
     automaticUnauthRedirect: boolean = true
   ): Promise<BaseResponseModel<ResModel | null>> {
     return this.sendRequest<null, ResModel>(
@@ -148,6 +159,7 @@ export abstract class ApiBaseService {
       path,
       null,
       params,
+      contentType,
       automaticUnauthRedirect
     );
   }

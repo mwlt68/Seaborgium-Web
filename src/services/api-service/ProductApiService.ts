@@ -1,5 +1,6 @@
 import { BaseResponseModel } from "../../datas/response-models/BaseResponseModel";
 import { ProductResultModel } from "../../datas/response-models/ProductResultModel";
+import { ContentType } from "../../utils/enums/ContentTypes";
 import { ApiBaseService } from "./ApiBaseService";
 
 export class ProductApiService extends ApiBaseService {
@@ -36,7 +37,8 @@ export class ProductApiService extends ApiBaseService {
   ): Promise<BaseResponseModel<ProductResultModel | null>> {
     var response = await this.postRequest<ProductResultModel, ProductResultModel>(
       this.productInsertPath,
-      product
+      product,
+      ContentType.multipart
     );
     debugger;
     return response;
@@ -47,7 +49,8 @@ export class ProductApiService extends ApiBaseService {
   ): Promise<BaseResponseModel<ProductResultModel | null>> {
     var response = await this.putRequest<ProductResultModel, ProductResultModel>(
       this.productUpdatePath,
-      product
+      product,
+      ContentType.multipart
     );
     debugger;
     return response;

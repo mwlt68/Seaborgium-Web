@@ -27,9 +27,6 @@ export const styles = {
     justifyContent: "space-between",
     padding: "1em 1em",
   },
-  productCardImage: {
-    objectFit: "contain",
-  },
   productCardContent: {
     display: "flex",
     flexGrow: 1,
@@ -43,5 +40,5 @@ export const styles = {
   editingCardActions: {
     display: "flex",
     justifyContent: "space-between",
-  },
+  }
 };
