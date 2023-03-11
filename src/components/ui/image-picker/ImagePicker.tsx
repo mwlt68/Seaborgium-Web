@@ -4,7 +4,7 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import PhotoIcon from "@mui/icons-material/Photo";
 
-export type ImageUrlHandleFunction = () => string | null;
+export type ImageUrlHandleFunction = () => string | undefined;
 export type ImageChangeHandleFunction = (file: File | undefined) => void;
 export type ImageOperationProps = {
   imageUrlHandle: ImageUrlHandleFunction;

@@ -168,13 +168,12 @@ export default function ProductPage() {
     setPickedImage(file);
   }
 
-  const getImageUrl = (): string | null => {
-    debugger;
+  const getImageUrl = (): string | undefined => {
     if (pickedImage != null) return URL.createObjectURL(pickedImage);
     else
-      return product.image != null
+      return product.image != null && product.image.length > 0
         ? "data:image/png;base64," + product.image
-        : null;
+        : undefined;
   };
 
   return (
