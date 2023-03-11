@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, CircularProgress, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { NavigationConsts } from "../../utils/consts/NavigationConsts";
 import { DefaultTextConst } from "../../utils/consts/DefaultTextConst";
@@ -16,34 +22,30 @@ export default function LoginPage() {
   const [registerButtonEnable, setRegisterButtonEnable] = useState(true);
   const [registrationSuccesful, setRegistrationSuccesful] = useState(false);
   const navigate = useNavigate();
-  const passwordConfirmationErrorMessage = "Password confirmation not correct !"
+  const passwordConfirmationErrorMessage =
+    "Password confirmation not correct !";
   const registerSuccessfulRedirectionDelay = 2000;
 
-  
   const handleRegister = async () => {
     setRegisterButtonEnable(false);
     localStorage.removeItem(ProjectConsts.TokenStorageKey);
-    if(password !== passwordConfirm){
-      setErrorMessage(
-        passwordConfirmationErrorMessage
-      );
+    if (password !== passwordConfirm) {
+      setErrorMessage(passwordConfirmationErrorMessage);
       return;
     }
-    UserApiService
-      .register(username, password)
+    UserApiService.register(username, password)
       .then((registerResponse) => {
-        debugger
+        debugger;
         if (
           registerResponse?.result?.token &&
           registerResponse.hasException === false
-          ){
-            setRegistrationSuccesful(true)
+        ) {
+          setRegistrationSuccesful(true);
           // localStorage.setItem(ProjectConsts.TokenStorageKey, registerResponse.result.token);
-          setTimeout(()=> {
+          setTimeout(() => {
             navigate(NavigationConsts.LoginPage);
-           }, registerSuccessfulRedirectionDelay);
-        }
-        else
+          }, registerSuccessfulRedirectionDelay);
+        } else
           setErrorMessage(
             registerResponse.exceptionContent ?? DefaultTextConst.ErrorMessage
           );
@@ -62,16 +64,14 @@ export default function LoginPage() {
 
   return (
     <Box sx={styles.background}>
-      <Box
-        sx={styles.container}
-      >
+      <Box sx={styles.container}>
         <h1 style={styles.header}>{ProjectConsts.Name}</h1>
 
-        <Box
-          sx={styles.input}
-        >
+        <Box sx={styles.input}>
           {errorMessage && (
-            <h4 style={styles.errorMessageText}>{errorMessage}</h4>
+            <Typography component="h4" sx={styles.errorMessageText}>
+              {errorMessage}
+            </Typography>
           )}
 
           <TextField
@@ -97,13 +97,13 @@ export default function LoginPage() {
             onChange={(event) => setPasswordConfirm(event.target.value)}
           />
 
-          <RegisterButtonOrSuccesful/>
+          <RegisterButtonOrSuccesful />
 
-          <Button 
-            size="small" 
+          <Button
+            size="small"
             style={styles.signUpButton}
             onClick={handleSignInRedirect}
-            >
+          >
             Or Sign In
           </Button>
         </Box>
@@ -111,16 +111,20 @@ export default function LoginPage() {
     </Box>
   );
 
-  function RegisterButtonOrSuccesful(){
-    if(registrationSuccesful){
-      return(
+  function RegisterButtonOrSuccesful() {
+    if (registrationSuccesful) {
+      return (
         <Box sx={styles.registrationSuccesfulBox}>
-          <CircularProgress sx={styles.registrationSuccesfulCircular} size= "2em"/>
-          <p style={styles.registrationSuccesfulText}>Sign up successful. You are redirected to the Sign In page.</p>
+          <CircularProgress
+            sx={styles.registrationSuccesfulCircular}
+            size="2em"
+          />
+          <p style={styles.registrationSuccesfulText}>
+            Sign up successful. You are redirected to the Sign In page.
+          </p>
         </Box>
-      )
-    }
-    else {
+      );
+    } else {
       return (
         <LoadingButton
           loading={!registerButtonEnable}
@@ -131,9 +135,7 @@ export default function LoginPage() {
         >
           Sign Up
         </LoadingButton>
-      )
+      );
     }
   }
 }
-
-

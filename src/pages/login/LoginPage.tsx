@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { AuthenticationApiService } from "../../services/api-service/AuthenticationApiService";
 import { NavigationConsts } from "../../utils/consts/NavigationConsts";
@@ -42,9 +42,9 @@ export default function LoginPage() {
     navigate(NavigationConsts.HomePage);
   };
 
-  const signUpClickhandle = ()=>{
+  const signUpClickhandle = () => {
     navigate(NavigationConsts.RegisterPage);
-  }
+  };
 
   return (
     <Box sx={styles.background}>
@@ -53,7 +53,9 @@ export default function LoginPage() {
 
         <Box sx={styles.input}>
           {errorMessage && (
-            <h3 style={styles.errorMessageText}>{errorMessage}</h3>
+            <Typography component="h4" sx={styles.errorMessageText}>
+              {errorMessage}
+            </Typography>
           )}
 
           <TextField
@@ -92,8 +94,10 @@ export default function LoginPage() {
             Login
           </LoadingButton>
 
-          <Button size="small" style={styles.signUpButton}
-          onClick={signUpClickhandle}
+          <Button
+            size="small"
+            style={styles.signUpButton}
+            onClick={signUpClickhandle}
           >
             Or Sign Up
           </Button>

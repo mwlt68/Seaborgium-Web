@@ -40,6 +40,7 @@ export const styles = {
   },
   errorMessageText: {
     color: "Red",
+    whiteSpace: "pre-line"
   },
   input: {
     flexGrow: 1,
