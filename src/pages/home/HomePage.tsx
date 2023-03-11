@@ -22,6 +22,7 @@ import {
 } from "../../utils/consts/NavigationConsts";
 import { AdvancedSideBar } from "../../components/ui/side-bar/AdvancedSideBar";
 import { UrlHelper } from "../../utils/helpers/UrlHelper";
+import { ImageHelper } from "../../utils/helpers/ImageHelper";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -109,7 +110,7 @@ export default function HomePage() {
         }}
       >
         <Card>
-          <ProductCardMedia />
+          <ProductCardMedia product={props.product} />
           <ProductCardContent product={props.product} />
           <ProductCardAction productPrice={props.product.price} />
         </Card>
@@ -117,12 +118,12 @@ export default function HomePage() {
     );
   }
 
-  function ProductCardMedia() {
+  function ProductCardMedia(props: { product: ProductResultModel }) {
     return (
       <CardMedia
         component="img"
         height={styles.productImage.height}
-        image="https://img-lcwaikiki.mncdn.com/mnresize/1024/-/pim/productimages/20222/6012505/v1/l_20222-w2cg02z8-rfh-96-81-93-190_a.jpg"
+        image= {ImageHelper.Get( props.product.image)}
         sx={styles.productCardImage}
       />
     );

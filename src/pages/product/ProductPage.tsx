@@ -26,6 +26,7 @@ import {
   NavigationConsts,
   QueryParameterConsts,
 } from "../../utils/consts/NavigationConsts";
+import { ImageHelper } from "../../utils/helpers/ImageHelper";
 import { styles } from "./ProductPageStyle";
 
 export default function ProductPage() {
@@ -171,9 +172,7 @@ export default function ProductPage() {
   const getImageUrl = (): string | undefined => {
     if (pickedImage != null) return URL.createObjectURL(pickedImage);
     else
-      return product.image != null && product.image.length > 0
-        ? "data:image/png;base64," + product.image
-        : undefined;
+      return ImageHelper.Get(product.image);
   };
 
   return (
