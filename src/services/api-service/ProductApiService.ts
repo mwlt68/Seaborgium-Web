@@ -1,10 +1,10 @@
+import { ProductRequestModel } from "../../datas/request-models/ProductRequestModel";
 import { BaseResponseModel } from "../../datas/response-models/BaseResponseModel";
 import { ProductResultModel } from "../../datas/response-models/ProductResultModel";
 import { ContentType } from "../../utils/enums/ContentTypes";
 import { ApiBaseService } from "./ApiBaseService";
 
 export class ProductApiService extends ApiBaseService {
-
   static readonly getAllProductsPath: string = "api/products/all";
   static readonly getProductPath: string = "api/products";
   static readonly productInsertPath: string = "api/products/insert";
@@ -33,36 +33,29 @@ export class ProductApiService extends ApiBaseService {
   }
 
   static async insert(
-    product: ProductResultModel
+    product: ProductRequestModel
   ): Promise<BaseResponseModel<ProductResultModel | null>> {
-    var response = await this.postRequest<ProductResultModel, ProductResultModel>(
-      this.productInsertPath,
-      product,
-      ContentType.multipart
-    );
+    var response = await this.postRequest<
+      ProductRequestModel,
+      ProductResultModel
+    >(this.productInsertPath, product, ContentType.multipart);
     debugger;
     return response;
   }
 
   static async update(
-    product: ProductResultModel
+    product: ProductRequestModel
   ): Promise<BaseResponseModel<ProductResultModel | null>> {
-    var response = await this.putRequest<ProductResultModel, ProductResultModel>(
-      this.productUpdatePath,
-      product,
-      ContentType.multipart
-    );
+    var response = await this.putRequest<
+      ProductRequestModel,
+      ProductResultModel
+    >(this.productUpdatePath, product, ContentType.multipart);
     debugger;
     return response;
   }
 
-  static async delete(
-    id: string
-  ): Promise<BaseResponseModel<boolean | null>> {
-    var response = await this.deleteRequest(
-      this.productDeletePath,
-      id
-    );
+  static async delete(id: string): Promise<BaseResponseModel<boolean | null>> {
+    var response = await this.deleteRequest(this.productDeletePath, id);
     debugger;
     return response;
   }

@@ -9,8 +9,13 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ImagePicker } from "../../components/ui/image-picker/ImagePicker";
+import {
+  ImageChangeHandleFunction,
+  ImagePicker,
+  ImageUrlHandleFunction,
+} from "../../components/ui/image-picker/ImagePicker";
 import { AdvancedSideBar } from "../../components/ui/side-bar/AdvancedSideBar";
+import { ProductRequestModel } from "../../datas/request-models/ProductRequestModel";
 import { BaseResponseModel } from "../../datas/response-models/BaseResponseModel";
 import { ProductResultModel } from "../../datas/response-models/ProductResultModel";
 import ApiRequestCatchAndFinalize from "../../services/api-service/ApiRequestCatchAndFinalize";
@@ -29,6 +34,7 @@ export default function ProductPage() {
   const [isButtonLoading, setButtonLoading] = useState(false);
   const [alertText, setAlertText] = useState<undefined | string>(undefined);
   const [alertColor, setAlertColor] = useState<AlertColor>("error");
+  const [pickedImage, setPickedImage] = useState<File | undefined>(undefined);
   const [product, setProduct] = useState<ProductResultModel>(
     new ProductResultModel()
   );
@@ -72,9 +78,12 @@ export default function ProductPage() {
 
   function productSaveHandle() {
     setButtonLoading(true);
+    let productRequestModel = new ProductRequestModel(product, pickedImage);
     let productSave;
-    if (isAddingPage()) productSave = ProductApiService.insert(product);
-    else productSave = ProductApiService.update(product);
+    debugger;
+    if (isAddingPage())
+      productSave = ProductApiService.insert(productRequestModel);
+    else productSave = ProductApiService.update(productRequestModel);
     ApiRequestCatchAndFinalize(
       productSave,
       productSaveResponseHandle,
@@ -86,6 +95,7 @@ export default function ProductPage() {
   const productSaveResponseHandle = (
     productResult: BaseResponseModel<ProductResultModel | null>
   ) => {
+    debugger;
     if (productResult?.result && !productResult.hasException) {
       if (isAddingPage()) {
         searchParams.set(
@@ -121,9 +131,7 @@ export default function ProductPage() {
   const productDeleteResponseHandle = async (
     productResult: BaseResponseModel<boolean | null>
   ) => {
-    debugger;
     if (productResult?.result && !productResult.hasException) {
-      debugger;
       setAlertText(DefaultTextConst.ProductDeleteSuccessMessage);
       setAlertColor("success");
       await new Promise((resolve) =>
@@ -148,15 +156,27 @@ export default function ProductPage() {
       [event.target.name]: event.target.value,
     });
   }
-  const [file,setFile] = useState<File| undefined>(undefined)
-  function productImageChangeHandle(file: File) {
+
+  function productImageChangeHandle(file: File | undefined) {
     debugger;
-    setFile(file);
-    setProduct({
-      ...product,
-      ["image"]: file,
-    });
+    if (!file) {
+      setProduct({
+        ...product,
+        ["image"]: undefined,
+      });
+    }
+    setPickedImage(file);
   }
+
+  const getImageUrl = (): string | null => {
+    debugger;
+    if (pickedImage != null) return URL.createObjectURL(pickedImage);
+    else
+      return product.image != null
+        ? "data:image/png;base64," + product.image
+        : null;
+  };
+
   return (
     <AdvancedSideBar
       isLoading={pageLoading}
@@ -172,7 +192,7 @@ export default function ProductPage() {
         isSaveButtonLoading={isButtonLoading}
         deleteButtonHandle={productDeleteHandle}
         productImageChangeHandle={productImageChangeHandle}
-        image={product.image}
+        getImageUrl={getImageUrl}
       />
     </AdvancedSideBar>
   );
@@ -183,10 +203,10 @@ function PageContent(props: {
   handleChange: Function;
   saveButtonHandle: Function;
   deleteButtonHandle: Function;
-  productImageChangeHandle: Function;
   isAddingPage: boolean;
   isSaveButtonLoading: boolean;
-  image?: File;
+  productImageChangeHandle: ImageChangeHandleFunction;
+  getImageUrl: ImageUrlHandleFunction;
 }) {
   return (
     <Box sx={styles.container}>
@@ -198,7 +218,7 @@ function PageContent(props: {
         isSaveButtonLoading={props.isSaveButtonLoading}
         deleteButtonHandle={props.deleteButtonHandle}
         productImageChangeHandle={props.productImageChangeHandle}
-        image={props.image}
+        getImageUrl={props.getImageUrl}
       />
     </Box>
   );
@@ -210,13 +230,13 @@ function ProductCard(props: {
   saveButtonHandle: Function;
   deleteButtonHandle: Function;
   isSaveButtonLoading: boolean;
-  productImageChangeHandle: Function;
-  image?: File;
+  productImageChangeHandle: ImageChangeHandleFunction;
+  getImageUrl: ImageUrlHandleFunction;
 }) {
   return (
     <Card sx={styles.productCard}>
       <ImagePicker
-        image={props.image}
+        imageUrlHandle={props.getImageUrl}
         imageChangeHandle={props.productImageChangeHandle}
       />
       <ProductCardContent
@@ -272,7 +292,6 @@ function ProductCardActions(props: {
     </CardActions>
   );
 }
-
 
 function ProductCardContent(props: {
   productModel: ProductResultModel;

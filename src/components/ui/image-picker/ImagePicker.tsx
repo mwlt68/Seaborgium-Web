@@ -3,22 +3,22 @@ import { styles } from "./ImagePickerStyle";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import PhotoIcon from "@mui/icons-material/Photo";
-import { useState } from "react";
 
-export function ImagePicker(props: {
-  image?: File;
-  imageChangeHandle: Function;
-}) {
+export type ImageUrlHandleFunction = () => string | null;
+export type ImageChangeHandleFunction = (file: File | undefined) => void;
+export type ImageOperationProps = {
+  imageUrlHandle: ImageUrlHandleFunction;
+  imageChangeHandle: ImageChangeHandleFunction;
+};
+
+export function ImagePicker(props: ImageOperationProps) {
   return (
     <Box sx={styles.imagePickerContainer}>
-      {!props.image ? (
-        <ImagePick
-          image={props.image}
-          imageChangeHandle={props.imageChangeHandle}
-        />
+      {!props.imageUrlHandle() ? (
+        <ImagePick imageChangeHandle={props.imageChangeHandle} />
       ) : (
         <ImageShow
-          image={props.image}
+          imageUrlHandle={props.imageUrlHandle}
           imageChangeHandle={props.imageChangeHandle}
         />
       )}
@@ -26,30 +26,19 @@ export function ImagePicker(props: {
   );
 }
 
-function ImageShow(props: { image?: File; imageChangeHandle: Function }) {
-  
-  const [f,sf] =useState<string|undefined>(undefined)
-
-  const getImageURL = () =>{
-    debugger;
-    var reader = new FileReader();
-    reader.readAsDataURL(props.image!);
-    reader.onload = function () {
-      var a  =reader.result?.toString();
-      sf(a) ;
-    };
-    //return   props.image != null ? URL.createObjectURL(props.image) : null;
-  }
-  getImageURL();
+function ImageShow(props: {
+  imageUrlHandle: Function;
+  imageChangeHandle: Function;
+}) {
   return (
     <Box sx={styles.imagePickedBox}>
       <Box
         component="img"
-        src={f}
+        src={props.imageUrlHandle()}
         sx={styles.imagePickerImageBox}
       />
       <Box sx={styles.imagePickerOperationBox}>
-        <IconButton onClick={()=>props.imageChangeHandle(null)}>
+        <IconButton onClick={() => props.imageChangeHandle(undefined)}>
           <RemoveCircleIcon fontSize="large" color="error" />
         </IconButton>
         <ImageInput imageChangeHandle={props.imageChangeHandle}>
@@ -62,10 +51,7 @@ function ImageShow(props: { image?: File; imageChangeHandle: Function }) {
   );
 }
 
-function ImagePick(props: {
-  image?: File | undefined;
-  imageChangeHandle: Function;
-}) {
+function ImagePick(props: { imageChangeHandle: Function }) {
   return (
     <>
       <ImageInput imageChangeHandle={props.imageChangeHandle}>
