@@ -42,6 +42,10 @@ export default function LoginPage() {
     navigate(NavigationConsts.HomePage);
   };
 
+  const signUpClickhandle = ()=>{
+    navigate(NavigationConsts.RegisterPage);
+  }
+
   return (
     <Box sx={styles.background}>
       <Box sx={styles.container}>
@@ -88,7 +92,9 @@ export default function LoginPage() {
             Login
           </LoadingButton>
 
-          <Button size="small" style={styles.signUpButton}>
+          <Button size="small" style={styles.signUpButton}
+          onClick={signUpClickhandle}
+          >
             Or Sign Up
           </Button>
         </Box>
