@@ -1,25 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/home/HomePage";
+import LoginPage from "./pages/login/LoginPage";
+import ProductPage from "./pages/product/ProductPage";
+import RegisterPage from "./pages/register/RegisterPage";
+import { NavigationConsts } from "./utils/consts/NavigationConsts";
+import PrivateRoutes from "./components/ui/private-route/PrivateRoute";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path={NavigationConsts.LoginPage} element={<LoginPage />} />
+        <Route
+          path={NavigationConsts.RegisterPage}
+          element={<RegisterPage />}
+        />
+        <Route element={<PrivateRoutes />}>
+          <Route element={<HomePage />} path={NavigationConsts.HomePage} />
+          <Route
+            element={<ProductPage />}
+            path={NavigationConsts.ProductPage}
+          />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 
