@@ -40,7 +40,9 @@ export const styles = {
   },
   errorMessageText: {
     color: "Red",
-    margin: 5,
+    margin: "5px",
+    whiteSpace: "pre-line"
+
   },
   registrationSuccesfulBox :{
     display: "flex",

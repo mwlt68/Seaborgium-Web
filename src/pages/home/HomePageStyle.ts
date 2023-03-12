@@ -4,23 +4,14 @@ export const styles = {
   container: {
     display: "flex",
     flexDirection: "column",
-    overflowY: "auto",
     height: "100vh",
-  },
-  errorOrLoadingContainer: {
-    display: "flex",
-    height: "100vh",
-    flexDirection: "column",
-    alignItems:"center",
-    justifyContent: "center",
-    gap: "1rem"
   },
   headerCart: {
     display: "flex",
     flexDirection: "row-reverse",
     padding: ".5em",
     margin: "1em",
-    height: "1.5em",
+    minHeight: "2rem",
   },
   headerCartAddButton: {
     backgroundColor: ColorConsts.DarkBlue,
@@ -32,11 +23,11 @@ export const styles = {
     padding: "0 1rem",
     gap: "1em",
     justifyContent: "start",
-    alignItems: "center",
+    overflowY: "auto",
   },
   productCard: {
-    maxWidth: 300,
-    maxHeight: 450,
+    width: 300,
+    height: 440,
   },
   productCardAction: {
     display: "flex",
@@ -46,7 +37,14 @@ export const styles = {
   productCardImage: {
     objectFit: "fill",
   },
-  errorAlert: {
-    maxWidth:"50%"
+  productImage:{
+    height:250
   },
+  productCardContent:{
+    display:"flex",
+    flexDirection:"column"
+  },
+  contentTypography:{
+    flexGrow:1
+  }
 };
