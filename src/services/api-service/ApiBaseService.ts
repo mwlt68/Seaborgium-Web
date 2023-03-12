@@ -14,7 +14,7 @@ import { AuthManager } from "../../utils/helpers/AuthManager";
 
 export abstract class ApiBaseService {
 
-  static readonly BaseUrl: string = "https://localhost:7175";
+  static BaseUrl: string |undefined = process.env.REACT_APP_API_URL;
   static isBusy: boolean = false;
 
   static async sendRequestBase<ResponseModel>(
@@ -27,7 +27,7 @@ export abstract class ApiBaseService {
   ) {
     this.isBusy = true;
     let isUnauthorized: boolean = false;
-
+    debugger
     var response = await axios
       .request({
         baseURL: this.BaseUrl,

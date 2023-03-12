@@ -15,6 +15,7 @@
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.10",
     "axios": "^1.2.1",
+    "env-cmd": "^10.1.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "localforage": "^1.10.0",
     "lottie-react": "^2.3.1",
@@ -30,10 +31,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start:prod": "env-cmd -f .env.production react-scripts start",
+    "start:dev": "env-cmd -f .env.development react-scripts start",
+    "build:prod": "env-cmd -f .env.production react-scripts build",
+    "build:dev": "env-cmd -f .env.development react-scripts build"
   },
   "eslintConfig": {
     "extends": [
