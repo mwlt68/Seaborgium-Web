@@ -14,7 +14,7 @@ import { AuthManager } from "../../../utils/helpers/AuthManager";
 export default function SideBar(props: any) {
   const menuItems = { home: "Home", contact: "Contacts" };
 
-  const { collapseSidebar, toggleSidebar, collapsed, toggled } =
+  const { collapseSidebar, toggleSidebar, toggled } =
     useProSidebar();
 
   const toggle = () => {

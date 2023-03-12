@@ -35,7 +35,6 @@ export default function LoginPage() {
     setRegisterButtonEnable(false);
     UserApiService.register(username, password)
       .then((registerResponse) => {
-        debugger;
         if (
           registerResponse?.result?.token &&
           registerResponse.hasException === false

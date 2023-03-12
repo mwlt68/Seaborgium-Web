@@ -36,28 +36,28 @@ export default function HomePage() {
   const NoProductMessage =
     "You do not have any products, please click the 'Add product' button to add a product";
   const AddProductButtonText = "Add Product";
-  function getProducts() {
-    ProductApiService.getAll()
-      .then((res) => {
-        if (res?.result && !res.hasException) {
-          setProducts(res.result);
-        } else {
-          setPageLoadingError(res?.exceptionContent ?? null);
-        }
-      })
-      .catch((err: Error) => {
-        console.log("Page loading error : " + err.message);
-      })
-      .finally(() => {
-        if (AuthManager.hasNotToken()) {
-          navigate(NavigationConsts.LoginPage);
-        } else {
-          setPageLoading(false);
-        }
-      });
-  }
 
   useEffect(() => {
+    function getProducts() {
+      ProductApiService.getAll()
+        .then((res) => {
+          if (res?.result && !res.hasException) {
+            setProducts(res.result);
+          } else {
+            setPageLoadingError(res?.exceptionContent ?? null);
+          }
+        })
+        .catch((err: Error) => {
+          console.log("Page loading error : " + err.message);
+        })
+        .finally(() => {
+          if (AuthManager.hasNotToken()) {
+            navigate(NavigationConsts.LoginPage);
+          } else {
+            setPageLoading(false);
+          }
+        });
+    }
     getProducts();
   }, []);
 
@@ -79,9 +79,9 @@ export default function HomePage() {
   }
 
   function ProductCards() {
-    if (products == null || products.length == 0)
+    if (products === null || products.length === 0)
       return <Typography component={"h3"}>{NoProductMessage}</Typography>;
-    return products.map((x) => <ProductCart product={x} />);
+    return products.map((x) => <ProductCart product={x} key={x.id} />);
   }
 
   function ProductAddingButton() {
@@ -111,7 +111,6 @@ export default function HomePage() {
   function ProductCart(props: { product: ProductResultModel }) {
     return (
       <CardActionArea
-        key={props.product.id}
         sx={styles.productCard}
         onClick={(event) => {
           productCardClickHandle(props.product.id ?? -1);
