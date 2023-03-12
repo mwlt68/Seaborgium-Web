@@ -23,6 +23,8 @@ import {
 import { AdvancedSideBar } from "../../components/ui/side-bar/AdvancedSideBar";
 import { UrlHelper } from "../../utils/helpers/UrlHelper";
 import { ImageHelper } from "../../utils/helpers/ImageHelper";
+import ImageNotPreview from "../../assets/lotties/image-not-preview.json"
+import Lottie from "lottie-react";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -119,14 +121,20 @@ export default function HomePage() {
   }
 
   function ProductCardMedia(props: { product: ProductResultModel }) {
+    const imageUrl = ImageHelper.Get(props.product.image,props.product.imageType);
+    if(imageUrl != null )
     return (
       <CardMedia
-        component="img"
-        height={styles.productImage.height}
-        image= {ImageHelper.Get(props.product.image,props.product.imageType)}
-        sx={styles.productCardImage}
+      component="img"
+      height={styles.productImage.height}
+      image= {imageUrl}
+      sx={styles.productCardImage}
       />
-    );
+      );
+    else 
+    return(
+      <Lottie style={{ height: styles.productImage.height }} animationData={ImageNotPreview} loop={true}/>
+    )
   }
 
   function ProductCardContent(props: { product: ProductResultModel }) {
