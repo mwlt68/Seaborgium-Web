@@ -2,6 +2,7 @@ export class ProjectConsts {
   static Name = "SEABORGIUM";
   static TokenStorageKey = "TokenKey";
   static DefaultImageType= "image/png";
+  static PriceType = "₺";
 }
 
 export class ColorConsts {

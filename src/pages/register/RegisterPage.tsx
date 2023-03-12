@@ -27,12 +27,12 @@ export default function LoginPage() {
   const registerSuccessfulRedirectionDelay = 2000;
 
   const handleRegister = async () => {
-    setRegisterButtonEnable(false);
     localStorage.removeItem(ProjectConsts.TokenStorageKey);
     if (password !== passwordConfirm) {
       setErrorMessage(passwordConfirmationErrorMessage);
       return;
     }
+    setRegisterButtonEnable(false);
     UserApiService.register(username, password)
       .then((registerResponse) => {
         debugger;
@@ -41,7 +41,6 @@ export default function LoginPage() {
           registerResponse.hasException === false
         ) {
           setRegistrationSuccesful(true);
-          // localStorage.setItem(ProjectConsts.TokenStorageKey, registerResponse.result.token);
           setTimeout(() => {
             navigate(NavigationConsts.LoginPage);
           }, registerSuccessfulRedirectionDelay);

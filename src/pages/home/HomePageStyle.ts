@@ -4,7 +4,6 @@ export const styles = {
   container: {
     display: "flex",
     flexDirection: "column",
-    overflowY: "auto",
     height: "100vh",
   },
   headerCart: {
@@ -24,6 +23,7 @@ export const styles = {
     padding: "0 1rem",
     gap: "1em",
     justifyContent: "start",
+    overflowY: "auto",
   },
   productCard: {
     width: 300,

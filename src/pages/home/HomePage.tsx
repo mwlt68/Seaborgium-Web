@@ -23,8 +23,9 @@ import {
 import { AdvancedSideBar } from "../../components/ui/side-bar/AdvancedSideBar";
 import { UrlHelper } from "../../utils/helpers/UrlHelper";
 import { ImageHelper } from "../../utils/helpers/ImageHelper";
-import ImageNotPreview from "../../assets/lotties/image-not-preview.json"
+import ImageNotPreview from "../../assets/lotties/image-not-preview.json";
 import Lottie from "lottie-react";
+import { ProjectConsts } from "../../utils/consts/ProjectConsts";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -32,6 +33,9 @@ export default function HomePage() {
   const [pageLoadingError, setPageLoadingError] = useState<null | string>(null);
   const [products, setProducts] = useState<ProductResultModel[]>([]);
 
+  const NoProductMessage =
+    "You do not have any products, please click the 'Add product' button to add a product";
+  const AddProductButtonText = "Add Product";
   function getProducts() {
     ProductApiService.getAll()
       .then((res) => {
@@ -69,13 +73,15 @@ export default function HomePage() {
         <Card sx={styles.headerCart}>
           <ProductAddingButton />
         </Card>
-        <Box sx={styles.content}>
-          {products.map((x) => (
-            <ProductCart product={x} />
-          ))}
-        </Box>
+        <Box sx={styles.content}>{ProductCards()}</Box>
       </Box>
     );
+  }
+
+  function ProductCards() {
+    if (products == null || products.length == 0)
+      return <Typography component={"h3"}>{NoProductMessage}</Typography>;
+    return products.map((x) => <ProductCart product={x} />);
   }
 
   function ProductAddingButton() {
@@ -88,7 +94,7 @@ export default function HomePage() {
         variant="contained"
         startIcon={<AddCircleIcon />}
       >
-        Product Add
+        {AddProductButtonText}
       </Button>
     );
   }
@@ -121,20 +127,27 @@ export default function HomePage() {
   }
 
   function ProductCardMedia(props: { product: ProductResultModel }) {
-    const imageUrl = ImageHelper.Get(props.product.image,props.product.imageType);
-    if(imageUrl != null )
-    return (
-      <CardMedia
-      component="img"
-      height={styles.productImage.height}
-      image= {imageUrl}
-      sx={styles.productCardImage}
-      />
+    const imageUrl = ImageHelper.Get(
+      props.product.image,
+      props.product.imageType
+    );
+    if (imageUrl != null)
+      return (
+        <CardMedia
+          component="img"
+          height={styles.productImage.height}
+          image={imageUrl}
+          sx={styles.productCardImage}
+        />
       );
-    else 
-    return(
-      <Lottie style={{ height: styles.productImage.height }} animationData={ImageNotPreview} loop={true}/>
-    )
+    else
+      return (
+        <Lottie
+          style={{ height: styles.productImage.height }}
+          animationData={ImageNotPreview}
+          loop={true}
+        />
+      );
   }
 
   function ProductCardContent(props: { product: ProductResultModel }) {
@@ -168,7 +181,7 @@ export default function HomePage() {
     return (
       <CardActions sx={styles.productCardAction}>
         <Typography variant="subtitle1" color="green">
-          {props.productPrice} ₺
+          {props.productPrice+ " " +ProjectConsts.PriceType} 
         </Typography>
         <EditIcon color="inherit" />
       </CardActions>
