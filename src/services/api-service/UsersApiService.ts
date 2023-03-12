@@ -10,7 +10,6 @@ export class UserApiService extends ApiBaseService {
     username: string,
     password: string
   ): Promise<BaseResponseModel<LoginResponseModel | null>> {
-    debugger;
     let registrationReqModel = new LoginRequestModel(username, password);
     var result = await this.postRequest<LoginRequestModel, LoginResponseModel>(
       this.registrationReqPath,

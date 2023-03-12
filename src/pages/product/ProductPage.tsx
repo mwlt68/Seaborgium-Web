@@ -51,29 +51,29 @@ export default function ProductPage() {
       ? DefaultTextConst.ProductAddingSuccessMessage
       : DefaultTextConst.ProductEditingSuccessMessage;
 
-  function getProductHandle() {
-    const productId = searchParams.get(QueryParameterConsts.ProductPage.Id);
-    if (productId) {
-      ApiRequestCatchAndFinalize(
-        ProductApiService.get(productId),
-        getProductResponseHandle,
-        setPageLoading,
-        navigate
-      );
-    } else {
-      setPageLoading(false);
-    }
-  }
-  const getProductResponseHandle = (
-    res: BaseResponseModel<ProductResultModel | null>
-  ) => {
-    if (res?.result && !res.hasException) {
-      debugger;
-      setProduct(res.result);
-    }
-  };
+
 
   useEffect(() => {
+    function getProductHandle() {
+      const productId = searchParams.get(QueryParameterConsts.ProductPage.Id);
+      if (productId) {
+        ApiRequestCatchAndFinalize(
+          ProductApiService.get(productId),
+          getProductResponseHandle,
+          setPageLoading,
+          navigate
+        );
+      } else {
+        setPageLoading(false);
+      }
+    }
+    const getProductResponseHandle = (
+      res: BaseResponseModel<ProductResultModel | null>
+    ) => {
+      if (res?.result && !res.hasException) {
+        setProduct(res.result);
+      }
+    };
     getProductHandle();
   }, []);
 
@@ -81,7 +81,6 @@ export default function ProductPage() {
     setButtonLoading(true);
     let productRequestModel = new ProductRequestModel(product, pickedImage);
     let productSave;
-    debugger;
     if (isAddingPage())
       productSave = ProductApiService.insert(productRequestModel);
     else productSave = ProductApiService.update(productRequestModel);
@@ -96,7 +95,6 @@ export default function ProductPage() {
   const productSaveResponseHandle = (
     productResult: BaseResponseModel<ProductResultModel | null>
   ) => {
-    debugger;
     if (productResult?.result && !productResult.hasException) {
       if (isAddingPage()) {
         searchParams.set(
@@ -159,11 +157,10 @@ export default function ProductPage() {
   }
 
   function productImageChangeHandle(file: File | undefined) {
-    debugger;
     if (!file) {
       setProduct({
         ...product,
-        ["image"]: undefined,
+        "image": undefined,
       });
     }
     setPickedImage(file);
@@ -270,7 +267,6 @@ function ProductCardActions(props: {
         <LoadingButton
           loading={props.isLoading}
           variant="contained"
-          loadingPosition="start"
           onClick={(x) => props.deleteButtonHandle()}
           style={styles.deleteButton}
         >
@@ -281,7 +277,6 @@ function ProductCardActions(props: {
       <LoadingButton
         loading={props.isLoading}
         variant="contained"
-        loadingPosition="start"
         onClick={(x) => props.saveButtonHandle()}
         style={styles.saveButton}
       >

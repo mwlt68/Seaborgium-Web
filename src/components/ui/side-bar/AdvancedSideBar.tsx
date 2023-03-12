@@ -1,5 +1,4 @@
 import { AlertColor } from "@mui/lab";
-import { useState } from "react";
 import { AlertSnackBar } from "../alert-snackbar/AlertSnackbar";
 import { ErrorPageWithLottie } from "../error-page/ErrorPageWithLottie";
 import { CenterPageLoading } from "../page-loading/PageLoading";
@@ -13,6 +12,7 @@ type Props = {
   alertText?: string;
   alertColor?: AlertColor;
 };
+const voidFunc = ()=>{}
 
 export function AdvancedSideBar(props: Props) {
   return (
@@ -26,7 +26,7 @@ export function AdvancedSideBar(props: Props) {
       </SideBar>
       <AlertSnackBar
         alertText={props.alertText}
-        closeHandle={props.alertCloseHandler ?? new Function()}
+        closeHandle={props.alertCloseHandler ?? voidFunc}
         severity={props.alertColor}
       />
     </>

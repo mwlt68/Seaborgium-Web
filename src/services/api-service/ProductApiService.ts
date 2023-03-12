@@ -23,7 +23,6 @@ export class ProductApiService extends ApiBaseService {
   static async get(
     id: string
   ): Promise<BaseResponseModel<ProductResultModel | null>> {
-    debugger;
     const paramater = new URLSearchParams({ id: id });
     var response = await this.getRequest<ProductResultModel>(
       this.getProductPath,
@@ -39,7 +38,6 @@ export class ProductApiService extends ApiBaseService {
       ProductRequestModel,
       ProductResultModel
     >(this.productInsertPath, product, ContentType.multipart);
-    debugger;
     return response;
   }
 
@@ -50,13 +48,11 @@ export class ProductApiService extends ApiBaseService {
       ProductRequestModel,
       ProductResultModel
     >(this.productUpdatePath, product, ContentType.multipart);
-    debugger;
     return response;
   }
 
   static async delete(id: string): Promise<BaseResponseModel<boolean | null>> {
     var response = await this.deleteRequest(this.productDeletePath, id);
-    debugger;
     return response;
   }
 }
