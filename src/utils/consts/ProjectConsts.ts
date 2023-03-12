@@ -1,6 +1,7 @@
 export class ProjectConsts {
   static Name = "SEABORGIUM";
   static TokenStorageKey = "TokenKey";
+  static DefaultImageType= "image/png";
 }
 
 export class ColorConsts {

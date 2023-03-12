@@ -123,7 +123,7 @@ export default function HomePage() {
       <CardMedia
         component="img"
         height={styles.productImage.height}
-        image= {ImageHelper.Get( props.product.image)}
+        image= {ImageHelper.Get(props.product.image,props.product.imageType)}
         sx={styles.productCardImage}
       />
     );

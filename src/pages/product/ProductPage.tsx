@@ -172,7 +172,7 @@ export default function ProductPage() {
   const getImageUrl = (): string | undefined => {
     if (pickedImage != null) return URL.createObjectURL(pickedImage);
     else
-      return ImageHelper.Get(product.image);
+      return ImageHelper.Get(product.image,product.imageType);
   };
 
   return (
