@@ -31,9 +31,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start:prod": "env-cmd -f .env.production react-scripts start",
+    "start": "env-cmd -f .env.production react-scripts start",
     "start:dev": "env-cmd -f .env.development react-scripts start",
-    "build:prod": "env-cmd -f .env.production react-scripts build",
+    "build": "env-cmd -f .env.production react-scripts build",
     "build:dev": "env-cmd -f .env.development react-scripts build"
   },
   "eslintConfig": {
